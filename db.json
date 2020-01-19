@@ -1,0 +1,14 @@
+{
+    "productos" : [
+        {
+            "id": 1,
+            "nombre": "Redux basico",
+            "precio": 30
+        },
+        {
+            "id": 2,
+            "nombre": "React  y Redux, con thunks",
+            "precio": 50
+        }
+    ]
+}
