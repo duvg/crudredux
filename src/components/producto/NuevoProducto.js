@@ -1,20 +1,53 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+// Redux
+import { crearNuevoProductoAction } from '../../actions/productosActions'; 
+import { useDispatch } from 'react-redux';
 
 const NuevoProducto = () => {
+
+    // state
+    const [nombre, setNombre] = useState('');
+    const [precio, setPrecio] = useState('');
+
+    // Crear nuevo producto
+    const dispatch = useDispatch();
+    const agregarProducto = (producto) => dispatch( crearNuevoProductoAction(producto) );
+
+    // Agrear nuevo producto
+    const submitNuevoProducto = e => {
+        e.preventDefault();
+
+        // Validar el formulario
+        if(nombre.trim() === '' || precio.trim() === '') {
+            console.error('Error de validacion');
+            return;
+        }
+
+        // Crear el nuevo producto
+        agregarProducto({
+            nombre, precio
+        })
+
+        // Redireccionar
+    }
+
     return(
         <div className="row justify-content-center mt-5">
             <div className="col-md-8">
                 <div className="card">
                     <div className="card-body">
                         <h2 className="text-center mb-4 font-weight-bold ">Agregar Nuevo Libro</h2>
-                        <form>
+                        <form
+                            onSubmit={submitNuevoProducto}
+                        >
                             <div className="form-group">
                                 <label>Nombre Libro</label>
                                 <input 
                                     type="text" 
                                     className="form-control" 
-                                    placeholder="Nombre Libro" 
+                                    placeholder="Nombre Libro"
+                                    onChange={e => setNombre(e.target.value)}
                                 />
                             </div>
                             <div className="form-group">
@@ -22,7 +55,8 @@ const NuevoProducto = () => {
                                 <input 
                                     type="text" 
                                     className="form-control" 
-                                    placeholder="Precio Libro" 
+                                    placeholder="Precio Libro"
+                                    onChange={e => setPrecio(e.target.value)}
                                 />
                             </div>
 
