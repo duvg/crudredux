@@ -15,7 +15,6 @@ export function crearNuevoProductoAction(producto) {
         // Insertar registro en la API
         clientAxios.post('/libros', producto)
             .then(response => {
-                console.log(response);
                 dispatch( agregarProductoExito(producto) );
             })
             .catch(error => {

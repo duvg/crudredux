@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 
 // Redux
-import { crearNuevoProductoAction } from '../../actions/productosActions'; 
-import { useDispatch } from 'react-redux';
+import { crearNuevoProductoAction } from '../../actions/productosActions';
+import { validarFormularioAction, validacionExitoAction, validacionErrorAction } from '../../actions/validationActions';
+import { useDispatch, useSelector } from 'react-redux';
 
-const NuevoProducto = () => {
+const NuevoProducto = ({history}) => {
 
     // state
     const [nombre, setNombre] = useState('');
@@ -13,23 +14,37 @@ const NuevoProducto = () => {
     // Crear nuevo producto
     const dispatch = useDispatch();
     const agregarProducto = (producto) => dispatch( crearNuevoProductoAction(producto) );
+    
+    // Valdiar el formulario
+    const validarFormulario = () => dispatch( validarFormularioAction() );
+    const validacionExito = () => dispatch( validacionExitoAction() );
+    const validacionError = () => dispatch( validacionErrorAction() );
+
+    // Obtener los datos del state
+    const error = useSelector((state) => state.error.error);
 
     // Agrear nuevo producto
     const submitNuevoProducto = e => {
         e.preventDefault();
 
+
         // Validar el formulario
+
+        validarFormulario();
         if(nombre.trim() === '' || precio.trim() === '') {
-            console.error('Error de validacion');
+            validacionError();
+            console.log("Error XD");
             return;
         }
 
-        // Crear el nuevo producto
+        validacionExito();
+        // Crear el nuevo producto si pasa la validación
         agregarProducto({
             nombre, precio
         })
-
+        console.log("sss");
         // Redireccionar
+        history.push('/');
     }
 
     return(
@@ -62,6 +77,8 @@ const NuevoProducto = () => {
 
                             <button type="submit" className="btn btn-primary font-weight-bold text-uppercase d-block w-100">Agregar</button>
                         </form>
+
+                        { error ? <div className="alert alert-danger text-center mt-4">Todos los campos son requeridos</div> : null}
         
                     </div>
                 </div>
