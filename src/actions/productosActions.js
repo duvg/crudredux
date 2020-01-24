@@ -7,7 +7,13 @@ import {
     DESCARGA_PRODUCTOS_ERROR,
     OBTENER_PRODUCTO_ELIMINAR,
     PRODUCTO_ELIMINADO_EXITO,
-    PRODUCTO_ELIMINADO_ERROR
+    PRODUCTO_ELIMINADO_ERROR,
+    OBTENER_PRODUCTO_EDITAR,
+    PRODUCTO_EDITAR_EXITO,
+    PRODUCTO_EDITAR_ERROR,
+    INICIAR_EDICION_PRODUCTO,
+    PRODUCTO_EDITADO_EXITO,
+    PRODUCTO_EDITADO_ERROR
 } from '../types';
 
 import clientAxios from '../config/axios';
@@ -112,4 +118,68 @@ export const eliminarProductoExito = id => ({
 
 export const eliminarProductoError = () => ({
     type: PRODUCTO_ELIMINADO_ERROR
+});
+
+
+// Editar un producto
+export function obtenerProductoEditarAction (id) {
+    return ( dispatch ) => {
+        dispatch( obtenerProductoEditar() );
+        console.log(id);
+        // Obtener producto de la API
+        
+        clientAxios.get(`/libros/${id}`)
+            .then(response => {
+                console.log(response.data);
+                dispatch( obtenerProductoEditarExito(response.data) );
+            })
+            .catch(error => {
+                console.error(error);
+                dispatch( obtenerProductoEditarError() );
+            });
+    }
+}
+
+export const obtenerProductoEditar = () => ({
+    type: OBTENER_PRODUCTO_EDITAR
+});
+
+export const obtenerProductoEditarExito = producto => ({
+    type: PRODUCTO_EDITAR_EXITO,
+    payload: producto
+});
+
+export const obtenerProductoEditarError = () => ({
+    type: PRODUCTO_EDITAR_ERROR
+});
+
+// Modifica un producto en la api y en el state
+export function editarProductoAction ( producto ) {
+    return ( dispatch ) => {
+        dispatch( iniciarEdicionProducto() );
+
+        // Consultar la api
+        clientAxios.put(`/libros/${producto.id}`, producto)
+            .then(response => {
+                
+                dispatch( editarProductoExito(response.data) );
+            })
+            .catch(error =>{
+                
+                dispatch( editarProductoError() );
+            });
+    }
+}
+
+export const iniciarEdicionProducto = () => ({
+    type: INICIAR_EDICION_PRODUCTO,
+});
+
+export const editarProductoExito = producto => ({
+    type: PRODUCTO_EDITADO_EXITO,
+    payload: producto
+});
+
+export const editarProductoError = () => ({
+    type: PRODUCTO_EDITADO_ERROR,
 });
